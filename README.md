@@ -1,4 +1,5 @@
-# unnotech-backend-recruit
+# Unnotech Backend Engineer 徵才小專案
+
 1. 抓取 http://tw-nba.udn.com/nba/index 中的焦點新聞。
 2. 使用 [Django](https://www.djangoproject.com/) 設計恰當的 Model，并將所抓取新聞存儲至 DB。
 3. 使用 [Django REST Framework](http://www.django-rest-framework.org/) 配合 AJAX 實現以下頁面：

@@ -1,14 +1,15 @@
 from django.shortcuts import render
-from rest_framework import viewsets,mixins
+from rest_framework import viewsets, mixins
 
 # Create your views here.
-from .serializers import NewsDetailSerializers,NewsSerializers
+from .serializers import NewsDetailSerializers, NewsSerializers
 from .models import News
 
 
-class NewsViewSet(viewsets.GenericViewSet,mixins.CreateModelMixin):
+class NewsViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin):
     queryset = News.objects.all()
     serializer_class = NewsDetailSerializers
+
 
 
 class NewsReadOnlyViewSet(viewsets.ReadOnlyModelViewSet):

@@ -1,5 +1,7 @@
+import asyncio
 import requests
 import re
+import aiohttp
 from bs4 import BeautifulSoup
 from pydantic import BaseModel, HttpUrl
 from datetime import datetime
@@ -58,6 +60,29 @@ def grab_news_detail(news: News) -> str:
 
     return updated_news
 
+async def async_grab_news_detail(session: aiohttp.ClientSession, news: News) -> News:
+    async with session.get(str(news.detail_url)) as resp:
+        html_doc = await resp.text()
+    soup = BeautifulSoup(html_doc, "html.parser")
+
+    detail_title = soup.select("#story_body_content > h1")[0].text
+    author_info = soup.select("#shareBar > div.shareBar__info > div")[0].text
+    datetime_str, paper, author = parse_news_info(author_info)
+    img_detail = soup.select_one("#story_body_content").figure
+    img_url = img_detail.img.get("src")
+    img_comment = img_detail.figcaption.text
+    content = soup.select_one("#story_body_content").find_all("p")
+    content = "".join([str(para) for para in content[1:]])
+    
+    return News(
+        **news.model_dump(exclude_unset=True),
+        full_title=detail_title,
+        author=author,
+        update_time=datetime.strptime(datetime_str, "%Y-%m-%d %H:%M") if datetime_str else None,
+        paper=paper,
+        news_photo=NewsPhoto(imgUrl=img_url, comment=img_comment),
+        content=content,
+    )
 
 def parse_news_info(text):
     pattern = r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2})(\S+) / (.+)"
@@ -70,9 +95,25 @@ def parse_news_info(text):
         return None
 
 
-resp = requests.get("https://tw-nba.udn.com/nba/index/")
-html_doc = resp.text
-soup = BeautifulSoup(html_doc, "html.parser")
+async def main():
+    async with aiohttp.ClientSession() as session:
+        url = "https://tw-nba.udn.com/nba/index/"
+        resp = await session.get(url)
+        news_blocks = get_news_block(BeautifulSoup(await resp.text()))
+        tasks = [async_grab_news_detail(session, item) for item in news_blocks]
+        news = await asyncio.gather(*tasks)
 
-news = get_news_block(soup)
-news = [grab_news_detail(item) for item in get_news_block(soup)]
+    # Here you can process the 'news' list as needed
+    for item in news:
+        print(f"Title: {item.title}")
+        print(f"URL: {item.detail_url}")
+        print(f"Update time: {item.update_time}")
+        print("---")
+
+
+
+
+if __name__ == "__main__":
+    
+    asyncio.run(main())
+

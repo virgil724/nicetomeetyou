@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-
-const { data, status, error, refresh, clear } = await useFetch('/api/nba/', {
+import type { News } from '../utils/typesdeclare'
+const { data, status, error, refresh, clear } = await useFetch<Array<News>>('/api/nba/', {
 })
 const router = useRouter();
-const handleOnClick = (id) => {
+const handleOnClick = (id: number) => {
 
     router.push({ path: `/nba/${id}` })
 }

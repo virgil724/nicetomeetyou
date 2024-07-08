@@ -21,6 +21,12 @@ export default defineNuxtConfig({
       script: [
         { src: "https://platform.twitter.com/widgets.js" }
       ]
+    },
+  },
+  nitro: {
+    devProxy: {
+      '/api/': 'http://127.0.0.1:8000/api/'
     }
   }
+
 })

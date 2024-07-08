@@ -11,9 +11,9 @@
         </TableHeader>
         <TableBody>
 
-            <TableRow @click="handleOnClick(id)" v-for="(item, id) in data" :id="id">
+            <TableRow @click="handleOnClick(item.id)" v-for="item in data" :id="item.id">
                 <TableCell>
-                    <img :src="item.news_photo.imgUrl" alt="" class="h-[150px]">
+                    <img :src="item.news_photo[0].imgUrl" alt="" class="h-[150px]">
                 </TableCell>
                 <TableCell class='text-xl'>{{ item.title }}
                 </TableCell>
@@ -23,13 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import data from "~/assets/example.json";
 
-
+const { data, status, error, refresh, clear } = await useFetch('/api/nba/', {
+})
 const router = useRouter();
 const handleOnClick = (id) => {
 
-    console.log(id)
     router.push({ path: `/nba/${id}` })
 }
 </script>

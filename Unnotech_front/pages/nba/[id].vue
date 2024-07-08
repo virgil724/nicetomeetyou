@@ -2,8 +2,13 @@
 
     <div class="px-[10%] py-[1rem]">
         <h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
-            {{ posts.full_title }}
+            {{ posts.title }}
         </h1>
+        <figure class="photo_center photo-story">
+            <img style="aspect-ratio: 1279/856;" :src="posts.news_photo[0].imgUrl" :title="posts.news_photo[0].comment"
+                :alt="posts.news_photo[0].comment">
+            <figcaption>{{ posts.news_photo[0].comment }}</figcaption>
+        </figure>
         <div class="content" v-html="posts.content">
         </div>
 
@@ -11,14 +16,22 @@
 
 </template>
 <script lang="ts" setup>
-import data from "~/assets/example.json";
 
 const { params: { id } } = useRoute();
-const posts = computed(() => data[id])
+const { data: posts, status, error, refresh, clear } = await useFetch(`/api/nba-detail/${id}/`, {
+})
+
 
 </script>
 
 <style scoped>
+.photo_center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80vw
+}
+
 .content {
     :deep(p) {
         line-height: 1.75rem;

@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from nba_news.views import NewsViewSet, NewsDetailReadOnlyViewSet, NewsReadOnlyViewSet
 from rest_framework.routers import DefaultRouter
-
+from nba_news.routing import websocket_urlpatterns
 router = DefaultRouter()
 router.register(r"nba-edit", NewsViewSet, basename="news-edit")
 router.register(r"nba-detail", NewsDetailReadOnlyViewSet, basename="news-detail")
@@ -29,3 +29,6 @@ urlpatterns = [
     path("api/", include(router.urls)),
     path("admin/", admin.site.urls),
 ]
+
+
+

@@ -17,10 +17,11 @@
 </template>
 <script lang="ts" setup>
 import type { NewsDetail } from '~/utils/typesdeclare';
-
+const  config = useRuntimeConfig()
 
 const { params: { id } } = useRoute();
 const { data: posts, status, error, refresh, clear } = await useFetch<NewsDetail>(`/api/nba-detail/${id}/`, {
+    baseURL: config.public.apiBase
 })
 
 

@@ -27,6 +27,11 @@ export default defineNuxtConfig({
     devProxy: {
       '/api/': 'http://127.0.0.1:8000/api/'
     }
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.BACKEND_BASE_URL || "",
+      apiDomain: process.env.BACKEND_BASE_DOMAIN || "localhost:8000"
+    }
   }
-
 })

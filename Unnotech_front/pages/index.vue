@@ -24,7 +24,9 @@
 
 <script setup lang="ts">
 import type { News } from '../utils/typesdeclare'
+const config = useRuntimeConfig()
 const { data, status, error, refresh, clear } = await useFetch<Array<News>>('/api/nba/', {
+    baseURL: config.public.apiBase
 })
 const router = useRouter();
 const handleOnClick = (id: number) => {

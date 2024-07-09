@@ -5,6 +5,7 @@
   <Toaster />
 </template>
 <script lang="ts" setup>
+const config = useRuntimeConfig()
 import { useToast } from '@/components/ui/toast/use-toast'
 const { toast } = useToast()
 const popToast = (description: string) => {
@@ -14,7 +15,8 @@ const popToast = (description: string) => {
     description: description,
   });
 }
-const ws = new WebSocket("ws://localhost:8000/ws/nba/")
+const ws_schema = window.location.protocol === "http:" ? "ws:" : "wss:";
+const ws = new WebSocket(`${ws_schema}//${config.public.apiDomain}/ws/nba/`)
 ws.onopen = function () {
   ws.send(JSON.stringify({
     action: "subscribe_to_news_activity",

@@ -112,11 +112,10 @@ async def update_django(session: aiohttp.ClientSession, news: News) -> int:
         **news.model_dump(exclude=["title", "update_time", "news_photo"]),
     )
 
-
     async with session.post(
         "http://localhost:8000/api/nba-edit/", json=body.model_dump()
     ) as resp:
-        return await resp.status
+        return resp.status
 
 
 def parse_news_info(text):
@@ -134,7 +133,7 @@ async def main():
     async with aiohttp.ClientSession() as session:
         url = "https://tw-nba.udn.com/nba/index/"
         resp = await session.get(url)
-        news_blocks = get_news_block(BeautifulSoup(await resp.text()))
+        news_blocks = get_news_block(BeautifulSoup(await resp.text(), "html.parser"))
         tasks = [async_grab_news_detail(session, item) for item in news_blocks]
         news = await asyncio.gather(*tasks)
 
